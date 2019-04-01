@@ -1,0 +1,24 @@
+{
+  "name": "dom-diff",
+  "version": "1.0.0",
+  "description": "简单实现 dom-diff 算法，加深理解",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack --mode development"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MoonWang/dom-diff.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MoonWang/dom-diff/issues"
+  },
+  "homepage": "https://github.com/MoonWang/dom-diff#readme",
+  "devDependencies": {
+    "webpack": "^4.29.6",
+    "webpack-cli": "^3.3.0"
+  }
+}
