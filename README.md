@@ -42,7 +42,13 @@
 - 创建节点
     - document.createElement(tagName);
 - 添加属性
-    - Element.setAttribute(name, value);
+    - style
+        - Element.style.cssText = value;
+    - value
+        - input 或 textarea 输入框， Element.value = value;
+        - 其他 Element.setAttribute(name, value);
+    - 其他
+        - Element.setAttribute(name, value);
 - 生成子节点
     - 说明
         - 生成子节点应该是在生成父节点之后，所以 render 的过程是`先序遍历`
