@@ -5,5 +5,10 @@ module.exports = {
     output: {
         path: path.resolve('dist'),
         filename: 'bundle.js'
+    },
+    resolve: {
+        alias: {
+            'lib': path.resolve('lib')
+        }
     }
 }

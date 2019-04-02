@@ -86,14 +86,36 @@
 /************************************************************************/
 /******/ ({
 
+/***/ "./lib/createElement.js":
+/*!******************************!*\
+  !*** ./lib/createElement.js ***!
+  \******************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+eval("// 生成 Virtual DOM \nclass Element {\n    /**\n     * 一、将 DOM 节点抽象成 JS 对象结构来描述， DOM 树 -> Virtual DOM 树\n     * 描述一个节点，需要有3个维度：自己是什么节点、自己有哪些属性、自己有哪些子节点\n     * @param {String} tagName 节点名称\n     * @param {Object} attributes 属性对象\n     * @param {Array} children 子节点数组\n     */\n    constructor(tagName, attributes, children) {\n        this.tagName = tagName;\n        this.attributes = attributes;\n        this.children = children || [];\n    }\n    \n    // 二、将 Virtual DOM 转成真实 DOM 渲染，从前面的描述来入手，逐一处理\n    render() {\n        let element;\n        // 1. 自己是什么节点\n        element = document.createElement(this.tagName);\n\n        // 2. 自己有哪些属性\n        for (let attr in this.attributes) {\n            if (this.attributes.hasOwnProperty(attr)) {\n                element.setAttribute(attr, this.attributes[attr]);\n            }\n        }\n\n        // 3. 自己有哪些子节点\n        this.children.forEach(child => {\n            // 判断子节点是纯文本节点还是一个标签节点\n            let childEle = (child instanceof Element) ?\n                child.render() :\n                document.createTextNode(child);\n            element.appendChild(childEle);\n        })\n\n        return element;\n    }\n}\n\n// 创建方法，每次返回一个实例\nmodule.exports = function (tagName, attributes, children) {\n    return new Element(tagName, attributes, children);\n}\n\n//# sourceURL=webpack:///./lib/createElement.js?");
+
+/***/ }),
+
+/***/ "./src/1.js":
+/*!******************!*\
+  !*** ./src/1.js ***!
+  \******************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("// test1: 用描述创建节点\n\nlet createElement = __webpack_require__(/*! lib/createElement */ \"./lib/createElement.js\");\n\nlet ul = createElement('ul', {class: 'my_ul'}, [\n    createElement('li', {class: 'my_li_1'}, ['1']),\n    createElement('li', {class: 'my_li_2'}, ['2']),\n    createElement('li', {class: 'my_li_3'}, ['3'])\n]);\n\ndocument.body.appendChild(ul.render());\n\n//# sourceURL=webpack:///./src/1.js?");
+
+/***/ }),
+
 /***/ "./src/index.js":
 /*!**********************!*\
   !*** ./src/index.js ***!
   \**********************/
 /*! no static exports found */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-eval("console.log('DOM-diff');\n\n//# sourceURL=webpack:///./src/index.js?");
+eval("console.log('DOM-diff');\n\n__webpack_require__(/*! ./1.js */ \"./src/1.js\");\n\n\n//# sourceURL=webpack:///./src/index.js?");
 
 /***/ })
 

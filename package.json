@@ -4,7 +4,7 @@
   "description": "简单实现 dom-diff 算法，加深理解",
   "main": "index.js",
   "scripts": {
-    "build": "webpack --mode development"
+    "build": "webpack --mode development --watch"
   },
   "repository": {
     "type": "git",
