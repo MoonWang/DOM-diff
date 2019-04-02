@@ -86,6 +86,17 @@
 /************************************************************************/
 /******/ ({
 
+/***/ "./lib/config.js":
+/*!***********************!*\
+  !*** ./lib/config.js ***!
+  \***********************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+eval("module.exports = {\n    REMOVE: 'REMOVE', // 节点要移除\n    TEXT: \"TEXT\", // 文本内容要改变\n    ATTRS: \"ATTRS\", // 属性要改变\n    REPLACE: \"REPLACE\", // 节点\b要整个替换  \n}\n\n//# sourceURL=webpack:///./lib/config.js?");
+
+/***/ }),
+
 /***/ "./lib/createElement.js":
 /*!******************************!*\
   !*** ./lib/createElement.js ***!
@@ -97,6 +108,17 @@ eval("var utils = __webpack_require__(/*! ./utils */ \"./lib/utils.js\");\n\n// 
 
 /***/ }),
 
+/***/ "./lib/diff.js":
+/*!*********************!*\
+  !*** ./lib/diff.js ***!
+  \*********************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("let utils = __webpack_require__(/*! ./utils */ \"./lib/utils.js\");\nlet config = __webpack_require__(/*! ./config */ \"./lib/config.js\")\n\n/**\n * 计算并返回两个树的差异描述对象\n * @param {Object} oldTree 旧的 Virtual DOM 树\n * @param {Object} newTree 新的 Virtual DOM 树\n */\nfunction diff(oldTree, newTree) {\n    // 序号就是节点在旧的节点数中的序号\n    let index = 0;\n    // 记录差异的\b对象 { 序号: [{差异1}, {差异2}] }\n    let patches = {};\n    // \b提取方法用于递归遍历对比\n    walk(oldTree, newTree, index, patches);\n    return patches;\n}\n\n/**\n * 获取两个节点之间的差异变化描述\n * @param {*} oldNode 旧节点\n * @param {*} newNode 新节点\n * @param {Number} index 旧节点在树上的索引（位置）\n * @param {Object} patches 差异描述存储对象\n */\nfunction walk(oldNode, newNode, index, patches) {\n    let currentPatches = []; //这个数组里记录了所有的oldNode的变化\n    if (!newNode) { // 不存在新节点，表示旧节点被删除\n        // 删除节点描述 type - REMOVE \n        currentPatches.push({\n            type: config.REMOVE,\n            index\n        });\n        //如果说老节点的新的节点都是文本节点的话\n    } else if (utils.isString(oldNode) && utils.isString(newNode)) { // 都是文本节点\n        debugger\n        if (oldNode != newNode) { // 新旧文本节点的不相同，表示文本节点改变\n            // 文本节点改变 type - TEXT \n            currentPatches.push({\n                type: config.TEXT,\n                content: newNode\n            });\n        }\n    } else if (oldNode.tagName == newNode.tagName) { // 节点类型相同\n        // 比较新旧元素的属性对象\n        let attrsPatch = diffAttr(oldNode.attributes, newNode.attributes);\n        // 如果新旧元素有差异的属性的话\n        if (Object.keys(attrsPatch).length > 0) {\n            // 属性节点改变 type - ATTRS \n            currentPatches.push({\n                type: config.ATTRS,\n                attrs: attrsPatch\n            });\n        }\n        // 继续深递归遍历子节点\n        diffChildren(oldNode.children, newNode.children, index, patches);\n    } else { // 节点不是文本节点，且节点类型也不相同，则判定为节点被替换了\n        // 节点改变 type - REPLACE \n        currentPatches.push({\n            type: config.REPLACE,\n            node: newNode\n        });\n    }\n\n    if (currentPatches.length > 0) {\n        patches[index] = currentPatches;\n    }\n}\n\n/**\n * 获取同一个节点新旧属性的差异描述对象\n * @param {Obejct} oldAttrs 节点的旧\b属性\b对象\n * @param {Obejct} newAttrs 节点的新属性对象\n */\nfunction diffAttr(oldAttrs, newAttrs) {\n    let attrsPatch = {};\n    for (let attr in oldAttrs) {\n        //如果说老的属性和新属性不一样。一种是值改变 ，一种是属性被删除 了\n        if (oldAttrs[attr] != newAttrs[attr]) {\n            attrsPatch[attr] = newAttrs[attr];\n        }\n    }\n    for (let attr in newAttrs) {\n        if (!oldAttrs.hasOwnProperty(attr)) {\n            attrsPatch[attr] = newAttrs[attr];\n        }\n    }\n    return attrsPatch;\n}\n\n/**\n * 遍历子节点数组进行差异对比\n * @param {Array} oldChildren \n * @param {Array} newChildren \n * @param {Number} index 索引\n * @param {Object} patches 存储差异描述的对象\n */\nfunction diffChildren(oldChildren, newChildren, index, patches) {\n    oldChildren.forEach((child, idx) => {\n        // 同位置对比\n        walk(child, newChildren[idx], ++index, patches);\n    });\n}\n\nmodule.exports = diff;\n\n\n//# sourceURL=webpack:///./lib/diff.js?");
+
+/***/ }),
+
 /***/ "./lib/utils.js":
 /*!**********************!*\
   !*** ./lib/utils.js ***!
@@ -104,18 +126,18 @@ eval("var utils = __webpack_require__(/*! ./utils */ \"./lib/utils.js\");\n\n// 
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-eval("module.exports = {\n    // 设置属性，需要根据元素类型+属性类型来做特殊处理\n    setAttr(element, attr, value) {\n        switch (attr) {\n            case 'style':\n                element.style.cssText = value;\n                break;\n            case 'value':\n                let tagName = element.tagName.toLowerCase();\n                if (tagName == 'input' || tagName == 'textarea') {\n                    element.value = value;\n                } else {\n                    element.setAttribute(attr, value);\n                }\n                break;\n            default:\n                element.setAttribute(attr, value);\n                break;\n        }\n    },\n}\n\n//# sourceURL=webpack:///./lib/utils.js?");
+eval("module.exports = {\n    // 设置属性，需要根据元素类型+属性类型来做特殊处理\n    setAttr(element, attr, value) {\n        switch (attr) {\n            case 'style':\n                element.style.cssText = value;\n                break;\n            case 'value':\n                let tagName = element.tagName.toLowerCase();\n                if (tagName == 'input' || tagName == 'textarea') {\n                    element.value = value;\n                } else {\n                    element.setAttribute(attr, value);\n                }\n                break;\n            default:\n                element.setAttribute(attr, value);\n                break;\n        }\n    },\n    // 获取对象类型\n    getType(obj) {\n        // [object String]\n        return Object.prototype.toString.call(obj).replace(/\\[object\\s|\\]/g, '');\n    },\n    // 判断是否为字符串类型\n    isString(str) {\n        return this.getType(str) == 'String';\n    }\n}\n\n//# sourceURL=webpack:///./lib/utils.js?");
 
 /***/ }),
 
-/***/ "./src/1.js":
+/***/ "./src/2.js":
 /*!******************!*\
-  !*** ./src/1.js ***!
+  !*** ./src/2.js ***!
   \******************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-eval("// test1: 用描述创建节点\n\nlet createElement = __webpack_require__(/*! lib/createElement */ \"./lib/createElement.js\");\n\nlet ul = createElement('ul', {class: 'my_ul'}, [\n    createElement('li', {class: 'my_li_1'}, ['1']),\n    createElement('li', {class: 'my_li_2'}, ['2']),\n    createElement('li', {class: 'my_li_3'}, ['3'])\n]);\n\ndocument.body.appendChild(ul.render());\n\n//# sourceURL=webpack:///./src/1.js?");
+eval("// test2: 对比两个树，获取差异\n\nlet createElement = __webpack_require__(/*! lib/createElement */ \"./lib/createElement.js\");\nlet diff = __webpack_require__(/*! lib/diff */ \"./lib/diff.js\");\n\nlet ul1 = createElement('ul', {class: 'my_ul'}, [\n    createElement('li', {class: 'my_li_1'}, ['1']),\n    createElement('li', {class: 'my_li_2'}, ['2']),\n    createElement('li', {class: 'my_li_3'}, ['3'])\n]);\nlet ul2 = createElement('ul', {class: 'my_ul'}, [\n    // createElement('li', {class: 'my_li_1'}, ['1']),\n    createElement('li', {class: 'my_li_2'}, ['2']),\n    // createElement('li', {class: 'my_li_3'}, ['3'])\n]);\n\nconsole.log(ul1, ul2);\nconsole.log(diff(ul1, ul2));\n\n//# sourceURL=webpack:///./src/2.js?");
 
 /***/ }),
 
@@ -126,7 +148,7 @@ eval("// test1: 用描述创建节点\n\nlet createElement = __webpack_require__
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-eval("console.log('DOM-diff');\n\n__webpack_require__(/*! ./1.js */ \"./src/1.js\");\n\n\n//# sourceURL=webpack:///./src/index.js?");
+eval("console.log('DOM-diff');\n\n// require('./1.js');\n__webpack_require__(/*! ./2.js */ \"./src/2.js\");\n\n\n//# sourceURL=webpack:///./src/index.js?");
 
 /***/ })
 
