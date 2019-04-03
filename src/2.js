@@ -3,15 +3,26 @@
 let createElement = require('lib/createElement');
 let diff = require('lib/diff');
 
-let ul1 = createElement('ul', {class: 'my_ul'}, [
-    createElement('li', {class: 'my_li_1'}, ['1']),
-    createElement('li', {class: 'my_li_2'}, ['2']),
-    createElement('li', {class: 'my_li_3'}, ['3'])
+let ul1 = createElement('div', {class: 'div'}, [
+    createElement('p', {class: 'p'}, ['p标签']),
+    createElement('ul', {class: 'ul'}, [
+        createElement('li', {class: 'li1'}),
+        createElement('li', {class: 'li2'}),
+        createElement('li', {class: 'li3'}),
+    ]),
+    createElement('div', {class: 'div'}, ['div标签'])
 ]);
-let ul2 = createElement('ul', {class: 'my_ul'}, [
-    // createElement('li', {class: 'my_li_1'}, ['1']),
-    createElement('li', {class: 'my_li_2'}, ['2']),
-    // createElement('li', {class: 'my_li_3'}, ['3'])
+
+document.body.appendChild(ul1.render());
+
+let ul2 = createElement('div', {class: 'div'}, [
+    createElement('p', {class: 'p'}, ['p标签1']),
+    createElement('ul', {class: 'ul'}, [
+        createElement('li', {class: 'li1'}),
+        // createElement('li', {class: 'li2'}),
+        createElement('li', {class: 'li3'}),
+    ]),
+    createElement('div', {class: 'div1'}, ['div标签'])
 ]);
 
 console.log(ul1, ul2);
